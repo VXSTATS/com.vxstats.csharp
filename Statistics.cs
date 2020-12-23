@@ -3,12 +3,14 @@ using System.Net;
 using System.Collections.Specialized;
 using System.Text;
 using System.Globalization;
-using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
+using System.Linq;
+using System.Diagnostics;
 #if __MOBILE__
 using Xamarin.Essentials;
-using Xamarian.Forms;
+#else
+using System.Drawing;
+using System.Windows.Forms;
 #endif
 
 namespace vxstats
@@ -206,6 +208,8 @@ namespace vxstats
             // http://pinvoke.net/default.aspx/gdi32/GetDeviceCaps.html
         }
 
+#if __MOBILE__
+#else
         private float getScalingFactor()
         {
             Graphics g = Graphics.FromHwnd(IntPtr.Zero);
@@ -217,6 +221,7 @@ namespace vxstats
 
             return ScreenScalingFactor; // 1.25 = 125%
         }
+#endif
 
         private NameValueCollection coreMessage() {
 
@@ -260,15 +265,16 @@ namespace vxstats
             }
 
 #if __MOBILE__
-            if (Device.RuntimePlatform == Device.iOS)
+            if (Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.iOS)
             {
+                result["osversion"] = os.VersionString;
                 result["os"] = "iOS";
             }
-            else if (Device.RuntimePlatform == Device.Android)
+            else if (Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.Android)
             {
+                result["osversion"] = os.VersionString;
                 result["os"] = "Android";
             }
-            result["osversion"] = os.VersionString;
 #endif
 
             if (!device.model().Equals(""))
@@ -368,11 +374,25 @@ namespace vxstats
                 result["voiceover"] = "1";
             }
 
+#if __MOBILE__
+            var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
+            var orientation = mainDisplayInfo.Orientation;
+            var rotation = mainDisplayInfo.Rotation;
+
+            var width = mainDisplayInfo.Width;
+            var height = mainDisplayInfo.Height;
+            var density = mainDisplayInfo.Density;
+
+            result["width"] = width.ToString();
+            result["height"] = height.ToString();
+            result["dpr"] = density.ToString();
+#else
             string screenWidth = Screen.PrimaryScreen.Bounds.Width.ToString();
             string screenHeight = Screen.PrimaryScreen.Bounds.Height.ToString();
             result["width"] = screenWidth;
             result["height"] = screenHeight;
             result["dpr"] = getScalingFactor().ToString();
+#endif
 
             long epochTicks = new DateTime(1970, 1, 1).Ticks;
             long unixTime = ((DateTime.UtcNow.Ticks - epochTicks) / TimeSpan.TicksPerSecond);
@@ -392,7 +412,10 @@ namespace vxstats
 #if DEBUG
                     foreach (string s in _message)
                         foreach (string v in _message.GetValues(s))
+                        {
+                            Debug.WriteLine("{0} {1}", s, v);
                             Console.WriteLine("{0} {1}", s, v);
+                        }
 #endif
                     var response = wb.UploadValues(m_serverFilePath, "POST", _message);
                     string responseInString = Encoding.UTF8.GetString(response);

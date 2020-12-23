@@ -27,29 +27,33 @@ namespace vxstats
         {
 #if __MOBILE__
             m_model = DeviceInfo.Model;
-            switch (Device.RuntimePlatform)
+            switch (Xamarin.Forms.Device.RuntimePlatform)
             {
-                case Device.iOS:
-                    if ( m_model.Equals( ""x86_64"" ) )
+                case Xamarin.Forms.Device.iOS:
+                    if ( m_model.Equals( "x86_64" ) )
                     {
                         m_model = "iOS Simulator";
                     }
                     else
                     {
-/*                      var versionBegin = m_model.indexOf( "," );
-                      if ( versionBegin > 1 && hwmodel.at( versionBegin - 1 ).isDigit() ) {
+                        var versionBegin = m_model.IndexOf( "," );
+                        if ( versionBegin > 1 && Char.IsDigit( m_model, versionBegin - 1 ) ) {
 
-        --versionBegin;
-      }
-      if ( versionBegin > 1 && hwmodel.at( versionBegin - 1 ).isDigit() ) {
+                            --versionBegin;
+                        }
+                        if ( versionBegin > 1 && Char.IsDigit( m_model, versionBegin - 1 ) ) {
 
-        --versionBegin;
-      } */
+                            --versionBegin;
+                        }
+                        m_version = m_model.Substring(versionBegin, m_model.Length - versionBegin);
+                        m_model = m_model.Substring(0, versionBegin);
                     }
                     break;
-                case Device.Android:
+                case Xamarin.Forms.Device.Android:
+                case Xamarin.Forms.Device.UWP:
+                default:
                     string[] infos = m_model.Split(' ');
-                    if ( infos.Length() == 2 )
+                    if ( infos.Length == 2 )
                     {
                         m_model = infos[0];
                         m_version = infos[1];
@@ -57,15 +61,12 @@ namespace vxstats
                     else {
 
                       infos = m_model.Split('-');
-                      if ( infos.Length() == 2 )
+                      if ( infos.Length == 2 )
                       {
                           m_model = infos[0];
                           m_version = infos[1];
                       }
                     }
-                    break;
-                case Device.UWP:
-                default:
                     break;
             }
             m_vendor = DeviceInfo.Manufacturer;
@@ -118,15 +119,16 @@ namespace vxstats
         public bool isTabletMode()
         {
 #if __MOBILE__
-            switch (Device.RuntimePlatform)
+            switch (Xamarin.Forms.Device.RuntimePlatform)
             {
-                case Device.iOS:
+                case Xamarin.Forms.Device.iOS:
                     return true;
                     break;
-                case Device.Android:
+                case Xamarin.Forms.Device.Android:
                     return true;
                     break;
             }
+            return m_tabletMode;
 #else
             return m_tabletMode;
 #endif
@@ -135,15 +137,16 @@ namespace vxstats
         public bool hasTouchScreen()
         {
 #if __MOBILE__
-            switch (Device.RuntimePlatform)
+            switch (Xamarin.Forms.Device.RuntimePlatform)
             {
-                case Device.iOS:
+                case Xamarin.Forms.Device.iOS:
                     return true;
                     break;
-                case Device.Android:
+                case Xamarin.Forms.Device.Android:
                     return true;
                     break;
             }
+            return m_touchScreen;
 #else
             return m_touchScreen;
 #endif
