@@ -221,7 +221,9 @@ namespace vxstats
         private NameValueCollection coreMessage() {
 
             NameValueCollection result = new NameValueCollection();
-            result["uuid"] = System.Guid.NewGuid().ToString();
+
+            vxstats.Device device = new vxstats.Device();
+            result["uuid"] = device.uniqueIdentifier();
 
             var os = Environment.OSVersion;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -256,8 +258,6 @@ namespace vxstats
             {
                 result["os"] = "Unknown";
             }
-
-            vxstats.Device device = new vxstats.Device();
 
 #if __MOBILE__
             if (Device.RuntimePlatform == Device.iOS)

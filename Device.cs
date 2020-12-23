@@ -73,6 +73,29 @@ namespace vxstats
 #endif
         }
 
+        public string uniqueIdentifier()
+        {
+#if __MOBILE__
+            string uuid = Preferences.Get("uuid", "", "group.com.vxstat.statistics");
+            if (uuid == null || uuid.Equals(""))
+            {
+                uuid = System.Guid.NewGuid().ToString();
+                Preferences.Set("uuid", uuid, "group.com.vxstat.statistics");
+            }
+            return uuid;
+#else
+            // TODO: Fix configuration/preferences
+            string uuid = ""; // d = Properties.Settings.Default["uuid"];
+            if (uuid == null || uuid.Equals(""))
+            {
+                uuid = System.Guid.NewGuid().ToString();
+//                Properties.Settings.Default["uuid"] = uuid;
+//                Properties.Settings.Default.Save();
+            }
+            return uuid;
+#endif
+        }
+
         public bool fairUse() { return false; }
         public string model() { return m_model; }
         public void setModel(string _model) { m_model = _model; }
