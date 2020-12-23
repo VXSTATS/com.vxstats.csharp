@@ -17,13 +17,13 @@ namespace vxstats
     {
         private int baseLength = 255;
 
-        private static string m_serverFilePath;
+        private static string m_serverFilePath = "";
 
-        private static string m_username;
+        private static string m_username = "";
 
-        private static string m_password;
+        private static string m_password = "";
 
-        private static string m_lastPage;
+        private static string m_lastPage = "";
 
         public Statistics()
         {
@@ -287,7 +287,7 @@ namespace vxstats
             }
 
             CultureInfo cultureInfo = CultureInfo.InstalledUICulture;
-            string[] locale = cultureInfo.Name.Split('_');
+            string[] locale = cultureInfo.Name.Split('-');
             result["language"] = locale[0];
             result["country"] = locale[1];
 
@@ -389,6 +389,11 @@ namespace vxstats
                 wb.Credentials = new NetworkCredential(m_username, m_password);
                 try
                 {
+#if DEBUG
+                    foreach (string s in _message)
+                        foreach (string v in _message.GetValues(s))
+                            Console.WriteLine("{0} {1}", s, v);
+#endif
                     var response = wb.UploadValues(m_serverFilePath, "POST", _message);
                     string responseInString = Encoding.UTF8.GetString(response);
                 }

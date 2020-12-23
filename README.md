@@ -17,6 +17,8 @@
    * [Android](#android)
    * [iOS](#ios)
    * [Windows](#windows)
+* [Known Issues](#known-issues)
+   * [Windows](#windows-1)
 
 # Preparation
 Checkout and open project with Visual Studio.
@@ -88,3 +90,7 @@ statistics.touch("$action");
 ## Android
 ## iOS
 ## Windows
+
+# Known Issues
+## Windows
+1. For applications that have been manifested for Windows 8.1 or Windows 10. Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS version value (6.2). To manifest your applications for Windows 8.1 or Windows 10, refer to Targeting your application for Windows. - https://docs.microsoft.com/de-de/windows/win32/api/winnt/ns-winnt-osversioninfoexa#remarks

@@ -7,11 +7,11 @@ namespace vxstats
 {
     public class Device
     {
-        private static string m_model;
+        private static string m_model = "";
 
-        private static string m_vendor;
+        private static string m_vendor = "";
 
-        private static string m_version;
+        private static string m_version = "";
 
         private static string m_osVersion = "0.0.0";
 
