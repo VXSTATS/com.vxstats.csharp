@@ -5,7 +5,7 @@ using Xamarin.Essentials;
 
 namespace vxstats
 {
-    public class App
+    public sealed class App
     {
         private static string m_identifier;
 
@@ -13,13 +13,27 @@ namespace vxstats
 
         private static string m_build;
 
-        public App()
+        private static readonly App instance = new App();
+
+        static App()
+        {
+        }
+
+        private App()
         {
 #if __MOBILE__
             m_identifier = AppInfo.PackageName;
             m_version = AppInfo.VersionString;
             m_build = AppInfo.BuildString;
 #endif
+        }
+
+        public static App Instance
+        {
+            get
+            {
+                return instance;
+            }
         }
 
         public bool fairUse() { return false; }

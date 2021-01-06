@@ -5,7 +5,7 @@ using Xamarin.Essentials;
 
 namespace vxstats
 {
-    public class Device
+    public sealed class Device
     {
         private static string m_model = "";
 
@@ -23,7 +23,13 @@ namespace vxstats
 
         private static bool m_touchScreen = false;
 
-        public Device()
+        private static readonly Device instance = new Device();
+
+        static Device()
+        {
+        }
+
+        private Device()
         {
 #if __MOBILE__
             m_model = DeviceInfo.Model;
@@ -72,6 +78,14 @@ namespace vxstats
             m_vendor = DeviceInfo.Manufacturer;
             m_osVersion = DeviceInfo.VersionString;
 #endif
+        }
+
+        public static Device Instance
+        {
+            get
+            {
+                return instance;
+            }
         }
 
         public string uniqueIdentifier()

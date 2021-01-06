@@ -26,64 +26,63 @@ Checkout and open project with Visual Studio.
 ## Setup
 Setup your environment with your credentials. Please insert your username, password and url here. For defuscation please follow our best practice documentation.
 ```c#
-vxstats.Statistics statistics = new vxstats.Statistics();
-statistics.setUsername( "sandbox" );
-statistics.setPassword( "sandbox" );
-statistics.setServerFilePath( "https://sandbox.vxstats.com" );
+Statistics.Instance.setUsername( "sandbox" );
+Statistics.Instance.setPassword( "sandbox" );
+Statistics.Instance.setServerFilePath( "https://sandbox.vxstats.com" );
 ```
 
 ## Page
 This is the global context, where you are currently on in your application. Just name it easy and with logical app structure to identify where the user stays.
 ```c#
-statistics.page("Main");
+Statistics.Instance.page("Main");
 ```
 
 ## Event
 When you would like to request a page with dynamic content please use this function.
 ```c#
-statistics.action("action", "value");
+Statistics.Instance.action("action", "value");
 ```
 
 ### Ads
 To capture ads - correspondingly the shown ad.
 ```c#
-statistics.ads("$campain");
+Statistics.Instance.ads("$campain");
 ```
 
 ### Move
 To capture map shifts - correspondingly the new center.
 ```c#
-statistics.move($latitude, $longitude);
+Statistics.Instance.move($latitude, $longitude);
 ```
 
 ### Open
 To capture open websites or documents including the information which page or document has been requested.
 ```c#
-statistics.open("$urlOrName");
+Statistics.Instance.open("$urlOrName");
 ```
 
 ### Play
 To capture played files including the information which file/action has been played.
 ```c#
-statistics.play("$urlOrName");
+Statistics.Instance.play("$urlOrName");
 ```
 
 ### Search
 To capture searches including the information for which has been searched.
 ```c#
-statistics.search("$search");
+Statistics.Instance.search("$search");
 ```
 
 ### Shake
 To capture when the device has been shaken.
 ```c#
-statistics.shake();
+Statistics.Instance.shake();
 ```
 
 ### Touch
 To capture typed/touched actions.
 ```c#
-statistics.touch("$action");
+Statistics.Instance.touch("$action");
 ```
 
 # Compatiblity

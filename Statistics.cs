@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace vxstats
 {
-    public class Statistics
+    public sealed class Statistics
     {
         private int baseLength = 255;
 
@@ -27,8 +27,22 @@ namespace vxstats
 
         private static string m_lastPage = "";
 
-        public Statistics()
+        private static readonly Statistics instance = new Statistics();
+
+        static Statistics()
         {
+        }
+
+        private Statistics()
+        {
+        }
+
+        public static Statistics Instance
+        {
+            get
+            {
+                return instance;
+            }
         }
 
         public void setServerFilePath(string _serverFilePath)
@@ -227,8 +241,7 @@ namespace vxstats
 
             NameValueCollection result = new NameValueCollection();
 
-            vxstats.Device device = new vxstats.Device();
-            result["uuid"] = device.uniqueIdentifier();
+            result["uuid"] = vxstats.Device.Instance.uniqueIdentifier();
 
             var os = Environment.OSVersion;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -277,19 +290,19 @@ namespace vxstats
             }
 #endif
 
-            if (!device.model().Equals(""))
+            if (!vxstats.Device.Instance.model().Equals(""))
             {
-                result["model"] = device.model();
+                result["model"] = vxstats.Device.Instance.model();
             }
 
-            if (!device.version().Equals(""))
+            if (!vxstats.Device.Instance.version().Equals(""))
             {
-                result["modelversion"] = device.version();
+                result["modelversion"] = vxstats.Device.Instance.version();
             }
 
-            if (!device.vendor().Equals(""))
+            if (!vxstats.Device.Instance.vendor().Equals(""))
             {
-                result["vendor"] = device.vendor();
+                result["vendor"] = vxstats.Device.Instance.vendor();
             }
 
             CultureInfo cultureInfo = CultureInfo.InstalledUICulture;
@@ -335,41 +348,40 @@ namespace vxstats
                 result["connection"] = "Wifi";
 #endif
 
-            vxstats.App app = new vxstats.App();
-            result["appid"] = app.identifier();
-            result["appversion"] = app.version();
-            string build = app.build();
+            result["appid"] = vxstats.App.Instance.identifier();
+            result["appversion"] = vxstats.App.Instance.version();
+            string build = vxstats.App.Instance.build();
             if (!build.Equals(""))
             {
                 result["appbuild"] = build;
             }
 
-            if (device.useDarkMode())
+            if (vxstats.Device.Instance.useDarkMode())
             {
                 result["dark"] = "1";
             }
 
-            if (app.fairUse())
+            if (vxstats.App.Instance.fairUse())
             {
                 result["fair"] = "1";
             }
 
-            if (device.isJailbroken())
+            if (vxstats.Device.Instance.isJailbroken())
             {
                 result["free"] = "1";
             }
 
-            if (device.isTabletMode())
+            if (vxstats.Device.Instance.isTabletMode())
             {
                 result["tabletmode"] = "1";
             }
 
-            if (device.hasTouchScreen())
+            if (vxstats.Device.Instance.hasTouchScreen())
             {
                 result["touch"] = "1";
             }
 
-            if (device.isVoiceOverActive())
+            if (vxstats.Device.Instance.isVoiceOverActive())
             {
                 result["voiceover"] = "1";
             }
