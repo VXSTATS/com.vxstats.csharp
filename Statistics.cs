@@ -25,7 +25,7 @@ namespace vxstats
 
         private static string password = "";
 
-        private static string m_lastPage = "";
+        private static string lastPage = "";
 
         private static readonly Statistics instance = new Statistics();
 
@@ -84,13 +84,13 @@ namespace vxstats
                 Console.WriteLine("Bad implementation - 'page': {0} is larger than {1} signs", page, baseLength);
                 page = page.Substring(0, baseLength);
             }
-            m_lastPage = page;
+            lastPage = page;
             Action("");
         }
 
         public void Action(string _action, string _value = "")
         {
-            if (m_lastPage.Equals(""))
+            if (lastPage.Equals(""))
             {
                 Console.WriteLine("Bad implementation - 'action': {0} with empty 'page'", _action);
             }
@@ -126,7 +126,7 @@ namespace vxstats
             string campaign = _campaign;
             if (campaign.Equals(""))
             {
-                Console.WriteLine("Bad implementation - 'ads' with empty 'campaign' name, 'page': {0}", m_lastPage);
+                Console.WriteLine("Bad implementation - 'ads' with empty 'campaign' name, 'page': {0}", lastPage);
             }
             else if (campaign.Length > baseLength)
             {
@@ -150,7 +150,7 @@ namespace vxstats
             string urlOrName = _urlOrName;
             if (urlOrName.Equals(""))
             {
-                Console.WriteLine("Bad implementation - 'open' with empty 'urlOrName' name, 'page': {0}", m_lastPage);
+                Console.WriteLine("Bad implementation - 'open' with empty 'urlOrName' name, 'page': {0}", lastPage);
             }
             else if (urlOrName.Length > baseLength)
             {
@@ -160,12 +160,12 @@ namespace vxstats
             Action("open", urlOrName);
         }
 
-        public void Play( string _urlOrName )
+        public void Play(string _urlOrName)
         {
             string urlOrName = _urlOrName;
             if (urlOrName.Equals(""))
             {
-                Console.WriteLine("Bad implementation - 'play' with empty 'urlOrName' name, 'page': {0}", m_lastPage);
+                Console.WriteLine("Bad implementation - 'play' with empty 'urlOrName' name, 'page': {0}", lastPage);
             }
             else if (urlOrName.Length > baseLength)
             {
@@ -180,7 +180,7 @@ namespace vxstats
             string text = _text;
             if (text.Equals(""))
             {
-                Console.WriteLine("Bad implementation - 'search' with empty 'text' name, 'page': {0}", m_lastPage);
+                Console.WriteLine("Bad implementation - 'search' with empty 'text' name, 'page': {0}", lastPage);
             }
             else if (text.Length > baseLength)
             {
@@ -195,21 +195,23 @@ namespace vxstats
             Action("shake");
         }
 
-        public void Touch( string _action )
+        public void Touch(string _action)
         {
             string action = _action;
             if (action.Equals(""))
             {
-                Console.WriteLine("Bad implementation - 'touch' with empty 'text' name, 'page': {0}", m_lastPage);
+                Console.WriteLine("Bad implementation - 'touch' with empty 'text' name, 'page': {0}", lastPage);
             }
             else if (action.Length > baseLength)
             {
                 Console.WriteLine("Bad implementation - 'action': {0} is larger than {1} signs", action, baseLength);
                 action = action.Substring(0, baseLength);
             }
-            Action( "touch", action);
+            Action("touch", action);
         }
 
+#if __MOBILE__
+#else
         [DllImport("gdi32.dll")]
         static extern int GetDeviceCaps(IntPtr hdc, int nIndex);
         public enum DeviceCap
@@ -219,9 +221,6 @@ namespace vxstats
 
             // http://pinvoke.net/default.aspx/gdi32/GetDeviceCaps.html
         }
-
-#if __MOBILE__
-#else
         private float GetScalingFactor()
         {
             Graphics g = Graphics.FromHwnd(IntPtr.Zero);
@@ -408,7 +407,7 @@ namespace vxstats
             long epochTicks = new DateTime(1970, 1, 1).Ticks;
             long unixTime = ((DateTime.UtcNow.Ticks - epochTicks) / TimeSpan.TicksPerSecond);
             result["created"] = unixTime.ToString();
-            result["page"] = m_lastPage;
+            result["page"] = lastPage;
 
             return result;
         }
