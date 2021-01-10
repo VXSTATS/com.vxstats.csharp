@@ -35,6 +35,7 @@ namespace vxstats
 
         private Statistics()
         {
+            // TODO: Reachability check
         }
 
         public static Statistics Instance
@@ -87,7 +88,7 @@ namespace vxstats
             Action("");
         }
 
-        public void Action( string _action, string _value = "" )
+        public void Action(string _action, string _value = "")
         {
             if (m_lastPage.Equals(""))
             {
@@ -109,13 +110,13 @@ namespace vxstats
             }
 
             NameValueCollection message = CoreMessage();
-            if (!_action.Equals(""))
+            if (!action.Equals(""))
             {
-                message["action"] = _action;
+                message["action"] = action;
             }
-            if (!_value.Equals(""))
+            if (!value.Equals(""))
             {
-                message["value"] = _value;
+                message["value"] = value;
             }
             SendMessage( message );
         }
@@ -132,7 +133,7 @@ namespace vxstats
                 Console.WriteLine("Bad implementation - 'campaign': {0} is larger than {1} signs", campaign, baseLength);
                 campaign = campaign.Substring(0, baseLength);
             }
-            Action("ads", _campaign);
+            Action("ads", campaign);
         }
 
         public void Move(double _latitude, double _longitude)
@@ -156,7 +157,7 @@ namespace vxstats
                 Console.WriteLine("Bad implementation - 'urlOrName': {0} is larger than {1} signs", urlOrName, baseLength);
                 urlOrName = urlOrName.Substring(0, baseLength);
             }
-            Action("open", _urlOrName);
+            Action("open", urlOrName);
         }
 
         public void Play( string _urlOrName )
@@ -171,7 +172,7 @@ namespace vxstats
                 Console.WriteLine("Bad implementation - 'urlOrName': {0} is larger than {1} signs", urlOrName, baseLength);
                 urlOrName = urlOrName.Substring(0, baseLength);
             }
-            Action("play", _urlOrName);
+            Action("play", urlOrName);
         }
 
         public void Search(string _text)
@@ -196,17 +197,17 @@ namespace vxstats
 
         public void Touch( string _action )
         {
-            string action_ = _action;
-            if (action_.Equals(""))
+            string action = _action;
+            if (action.Equals(""))
             {
                 Console.WriteLine("Bad implementation - 'touch' with empty 'text' name, 'page': {0}", m_lastPage);
             }
-            else if (action_.Length > baseLength)
+            else if (action.Length > baseLength)
             {
-                Console.WriteLine("Bad implementation - 'action': {0} is larger than {1} signs", action_, baseLength);
-                action_ = action_.Substring(0, baseLength);
+                Console.WriteLine("Bad implementation - 'action': {0} is larger than {1} signs", action, baseLength);
+                action = action.Substring(0, baseLength);
             }
-            Action( "touch", action_);
+            Action( "touch", action);
         }
 
         [DllImport("gdi32.dll")]

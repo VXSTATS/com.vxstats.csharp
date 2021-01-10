@@ -36,6 +36,7 @@ namespace vxstats
             }
         }
 
+        // TODO: Correct signed on Android or iOS
         public bool FairUse() { return false; }
 
         public string Identifier
@@ -73,7 +74,7 @@ namespace vxstats
 
             set
             {
-                Build = value;
+                build = value;
             }
         }
     }

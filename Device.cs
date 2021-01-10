@@ -15,13 +15,13 @@ namespace vxstats
 
         private static string osVersion = "0.0.0";
 
-        private static bool m_darkMode = false;
+        private static readonly bool darkMode = false;
 
-        private static bool m_jailbroken = false;
+        private static readonly bool jailbroken = false;
 
-        private static bool m_tabletMode = false;
+        private static readonly bool tabletMode = false;
 
-        private static bool m_touchScreen = false;
+        private static readonly bool touchScreen = false;
 
         private static readonly Device instance = new Device();
 
@@ -88,6 +88,7 @@ namespace vxstats
             }
         }
 
+        // TODO: Persistence uuid for non mobile
         public string UniqueIdentifier()
         {
 #if __MOBILE__
@@ -110,8 +111,6 @@ namespace vxstats
             return uuid;
 #endif
         }
-
-        public bool FairUse() { return false; }
 
         public string Model
         {
@@ -162,12 +161,12 @@ namespace vxstats
 
         public bool UseDarkMode()
         {
-            return m_darkMode;
+            return darkMode;
         }
 
         public bool IsJailbroken()
         {
-            return m_jailbroken;
+            return jailbroken;
         }
 
         public bool IsTabletMode()
@@ -177,15 +176,12 @@ namespace vxstats
             {
                 case Xamarin.Forms.Device.iOS:
                     return true;
-                    break;
                 case Xamarin.Forms.Device.Android:
                     return true;
-                    break;
             }
-            return m_tabletMode;
-#else
-            return m_tabletMode;
 #endif
+            // TODO: Check for TabletMode on Windows
+            return tabletMode;
         }
 
         public bool HasTouchScreen()
@@ -195,17 +191,15 @@ namespace vxstats
             {
                 case Xamarin.Forms.Device.iOS:
                     return true;
-                    break;
                 case Xamarin.Forms.Device.Android:
                     return true;
-                    break;
             }
-            return m_touchScreen;
-#else
-            return m_touchScreen;
 #endif
+            // TODO: Check for touchscreen
+            return touchScreen;
         }
 
+        // TODO: Check for voiceover
         public bool IsVoiceOverActive() { return false; }
     }
 }

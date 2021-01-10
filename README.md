@@ -21,7 +21,7 @@
    * [Windows](#windows-1)
 
 # Preparation
-Checkout and open project with Visual Studio.
+Checkout and open project with Visual Studio. For Xarmian define \_\_MOBILE\_\_ if not already done by your project.
 
 ## Setup
 Setup your environment with your credentials. Please insert your username, password and url here. For defuscation please follow our best practice documentation.
@@ -46,31 +46,31 @@ Statistics.Instance.Action("action", "value");
 ### Ads
 To capture ads - correspondingly the shown ad.
 ```c#
-Statistics.Instance.Ads("$campain");
+Statistics.Instance.Ads("campain");
 ```
 
 ### Move
 To capture map shifts - correspondingly the new center.
 ```c#
-Statistics.Instance.Move($latitude, $longitude);
+Statistics.Instance.Move(latitude, longitude);
 ```
 
 ### Open
 To capture open websites or documents including the information which page or document has been requested.
 ```c#
-Statistics.Instance.Open("$urlOrName");
+Statistics.Instance.Open("urlOrName");
 ```
 
 ### Play
 To capture played files including the information which file/action has been played.
 ```c#
-Statistics.Instance.Play("$urlOrName");
+Statistics.Instance.Play("urlOrName");
 ```
 
 ### Search
 To capture searches including the information for which has been searched.
 ```c#
-Statistics.Instance.Search("$search");
+Statistics.Instance.Search("search");
 ```
 
 ### Shake
@@ -82,7 +82,7 @@ Statistics.Instance.Shake();
 ### Touch
 To capture typed/touched actions.
 ```c#
-Statistics.Instance.Touch("$action");
+Statistics.Instance.Touch("action");
 ```
 
 # Compatiblity
