@@ -7,11 +7,11 @@ namespace vxstats
 {
     public sealed class App
     {
-        private static string m_identifier;
+        private static string identifier;
 
-        private static string m_version;
+        private static string version;
 
-        private static string m_build;
+        private static string build;
 
         private static readonly App instance = new App();
 
@@ -22,9 +22,9 @@ namespace vxstats
         private App()
         {
 #if __MOBILE__
-            m_identifier = AppInfo.PackageName;
-            m_version = AppInfo.VersionString;
-            m_build = AppInfo.BuildString;
+            identifier = AppInfo.PackageName;
+            version = AppInfo.VersionString;
+            build = AppInfo.BuildString;
 #endif
         }
 
@@ -36,12 +36,45 @@ namespace vxstats
             }
         }
 
-        public bool fairUse() { return false; }
-        public string identifier() { return m_identifier; }
-        public void setIdentifier(string _identifier) { m_identifier = _identifier; }
-        public string version() { return m_version; }
-        public void setVersion(string _version) { m_version = _version; }
-        public string build() { return m_build; }
-        public void setBuild(string _build) { m_build = _build; }
+        public bool FairUse() { return false; }
+
+        public string Identifier
+        {
+            get
+            {
+                return identifier;
+            }
+
+            set
+            {
+                identifier = value;
+            }
+        }
+
+        public string Version
+        {
+            get
+            {
+                return version;
+            }
+
+            set
+            {
+                version = value;
+            }
+        }
+
+        public string Build
+        {
+            get
+            {
+                return build;
+            }
+
+            set
+            {
+                Build = value;
+            }
+        }
     }
 }

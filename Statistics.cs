@@ -17,13 +17,13 @@ namespace vxstats
 {
     public sealed class Statistics
     {
-        private int baseLength = 255;
+        private static readonly int baseLength = 255;
 
-        private static string m_serverFilePath = "";
+        private static string serverFilePath = "";
 
-        private static string m_username = "";
+        private static string username = "";
 
-        private static string m_password = "";
+        private static string password = "";
 
         private static string m_lastPage = "";
 
@@ -45,34 +45,31 @@ namespace vxstats
             }
         }
 
-        public void setServerFilePath(string _serverFilePath)
+        public string ServerFilePath
         {
-            if (m_serverFilePath.Equals(_serverFilePath))
+            set
             {
-                return;
+                serverFilePath = value;
             }
-            m_serverFilePath = _serverFilePath;
         }
 
-        public void setUsername(string _username)
+        public string Username
         {
-            if (m_username.Equals(_username))
+            set
             {
-                return;
+                username = value;
             }
-            m_username = _username;
         }
 
-        public void setPassword(string _password)
+        public string Password
         {
-            if (m_password.Equals(_password))
+            set
             {
-                return;
+                password = value;
             }
-            m_password = _password;
         }
 
-        public void page(string _page)
+        public void Page(string _page)
         {
             string page = _page;
             if (page.Equals(""))
@@ -87,10 +84,10 @@ namespace vxstats
                 page = page.Substring(0, baseLength);
             }
             m_lastPage = page;
-            action("");
+            Action("");
         }
 
-        public void action( string _action, string _value = "" )
+        public void Action( string _action, string _value = "" )
         {
             if (m_lastPage.Equals(""))
             {
@@ -111,7 +108,7 @@ namespace vxstats
                 value = value.Substring(0, baseLength);
             }
 
-            NameValueCollection message = coreMessage();
+            NameValueCollection message = CoreMessage();
             if (!_action.Equals(""))
             {
                 message["action"] = _action;
@@ -120,10 +117,10 @@ namespace vxstats
             {
                 message["value"] = _value;
             }
-            sendMessage( message );
+            SendMessage( message );
         }
 
-        public void ads(string _campaign)
+        public void Ads(string _campaign)
         {
             string campaign = _campaign;
             if (campaign.Equals(""))
@@ -135,19 +132,19 @@ namespace vxstats
                 Console.WriteLine("Bad implementation - 'campaign': {0} is larger than {1} signs", campaign, baseLength);
                 campaign = campaign.Substring(0, baseLength);
             }
-            action("ads", _campaign);
+            Action("ads", _campaign);
         }
 
-        public void move(double _latitude, double _longitude)
+        public void Move(double _latitude, double _longitude)
         {
             if (_latitude == 0.0 || _longitude == 0.0)
             {
                 Console.WriteLine("Bad implementation - 'move' with empty 'latitude' or 'longitude'");
             }
-            action("move", String.Format("{0},{1}", _latitude, _longitude));
+            Action("move", String.Format("{0},{1}", _latitude, _longitude));
         }
 
-        public void open(string _urlOrName)
+        public void Open(string _urlOrName)
         {
             string urlOrName = _urlOrName;
             if (urlOrName.Equals(""))
@@ -159,10 +156,10 @@ namespace vxstats
                 Console.WriteLine("Bad implementation - 'urlOrName': {0} is larger than {1} signs", urlOrName, baseLength);
                 urlOrName = urlOrName.Substring(0, baseLength);
             }
-            action("open", _urlOrName);
+            Action("open", _urlOrName);
         }
 
-        public void play( string _urlOrName )
+        public void Play( string _urlOrName )
         {
             string urlOrName = _urlOrName;
             if (urlOrName.Equals(""))
@@ -174,10 +171,10 @@ namespace vxstats
                 Console.WriteLine("Bad implementation - 'urlOrName': {0} is larger than {1} signs", urlOrName, baseLength);
                 urlOrName = urlOrName.Substring(0, baseLength);
             }
-            action("play", _urlOrName);
+            Action("play", _urlOrName);
         }
 
-        public void search(string _text)
+        public void Search(string _text)
         {
             string text = _text;
             if (text.Equals(""))
@@ -189,15 +186,15 @@ namespace vxstats
                 Console.WriteLine("Bad implementation - 'text': {0} is larger than {1} signs", text, baseLength);
                 text = text.Substring(0, baseLength);
             }
-            action("search", text);
+            Action("search", text);
         }
 
-        public void shake()
+        public void Shake()
         {
-            action("shake");
+            Action("shake");
         }
 
-        public void touch( string _action )
+        public void Touch( string _action )
         {
             string action_ = _action;
             if (action_.Equals(""))
@@ -209,7 +206,7 @@ namespace vxstats
                 Console.WriteLine("Bad implementation - 'action': {0} is larger than {1} signs", action_, baseLength);
                 action_ = action_.Substring(0, baseLength);
             }
-            action( "touch", action_);
+            Action( "touch", action_);
         }
 
         [DllImport("gdi32.dll")]
@@ -224,7 +221,7 @@ namespace vxstats
 
 #if __MOBILE__
 #else
-        private float getScalingFactor()
+        private float GetScalingFactor()
         {
             Graphics g = Graphics.FromHwnd(IntPtr.Zero);
             IntPtr desktop = g.GetHdc();
@@ -237,11 +234,12 @@ namespace vxstats
         }
 #endif
 
-        private NameValueCollection coreMessage() {
+        private NameValueCollection CoreMessage() {
 
-            NameValueCollection result = new NameValueCollection();
-
-            result["uuid"] = vxstats.Device.Instance.uniqueIdentifier();
+            NameValueCollection result = new NameValueCollection
+            {
+                ["uuid"] = vxstats.Device.Instance.UniqueIdentifier()
+            };
 
             var os = Environment.OSVersion;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -290,19 +288,19 @@ namespace vxstats
             }
 #endif
 
-            if (!vxstats.Device.Instance.model().Equals(""))
+            if (!vxstats.Device.Instance.Model.Equals(""))
             {
-                result["model"] = vxstats.Device.Instance.model();
+                result["model"] = vxstats.Device.Instance.Model;
             }
 
-            if (!vxstats.Device.Instance.version().Equals(""))
+            if (!vxstats.Device.Instance.Version.Equals(""))
             {
-                result["modelversion"] = vxstats.Device.Instance.version();
+                result["modelversion"] = vxstats.Device.Instance.Version;
             }
 
-            if (!vxstats.Device.Instance.vendor().Equals(""))
+            if (!vxstats.Device.Instance.Vendor.Equals(""))
             {
-                result["vendor"] = vxstats.Device.Instance.vendor();
+                result["vendor"] = vxstats.Device.Instance.Vendor;
             }
 
             CultureInfo cultureInfo = CultureInfo.InstalledUICulture;
@@ -348,40 +346,40 @@ namespace vxstats
                 result["connection"] = "Wifi";
 #endif
 
-            result["appid"] = vxstats.App.Instance.identifier();
-            result["appversion"] = vxstats.App.Instance.version();
-            string build = vxstats.App.Instance.build();
+            result["appid"] = vxstats.App.Instance.Identifier;
+            result["appversion"] = vxstats.App.Instance.Version;
+            string build = vxstats.App.Instance.Build;
             if (!build.Equals(""))
             {
                 result["appbuild"] = build;
             }
 
-            if (vxstats.Device.Instance.useDarkMode())
+            if (vxstats.Device.Instance.UseDarkMode())
             {
                 result["dark"] = "1";
             }
 
-            if (vxstats.App.Instance.fairUse())
+            if (vxstats.App.Instance.FairUse())
             {
                 result["fair"] = "1";
             }
 
-            if (vxstats.Device.Instance.isJailbroken())
+            if (vxstats.Device.Instance.IsJailbroken())
             {
                 result["free"] = "1";
             }
 
-            if (vxstats.Device.Instance.isTabletMode())
+            if (vxstats.Device.Instance.IsTabletMode())
             {
                 result["tabletmode"] = "1";
             }
 
-            if (vxstats.Device.Instance.hasTouchScreen())
+            if (vxstats.Device.Instance.HasTouchScreen())
             {
                 result["touch"] = "1";
             }
 
-            if (vxstats.Device.Instance.isVoiceOverActive())
+            if (vxstats.Device.Instance.IsVoiceOverActive())
             {
                 result["voiceover"] = "1";
             }
@@ -403,7 +401,7 @@ namespace vxstats
             string screenHeight = Screen.PrimaryScreen.Bounds.Height.ToString();
             result["width"] = screenWidth;
             result["height"] = screenHeight;
-            result["dpr"] = getScalingFactor().ToString();
+            result["dpr"] = GetScalingFactor().ToString();
 #endif
 
             long epochTicks = new DateTime(1970, 1, 1).Ticks;
@@ -414,11 +412,11 @@ namespace vxstats
             return result;
         }
 
-        private void sendMessage(NameValueCollection _message ) {
+        private void SendMessage(NameValueCollection _message ) {
 
             using (var wb = new WebClient())
             {
-                wb.Credentials = new NetworkCredential(m_username, m_password);
+                wb.Credentials = new NetworkCredential(username, password);
                 try
                 {
 #if DEBUG
@@ -429,7 +427,7 @@ namespace vxstats
                             Console.WriteLine("{0} {1}", s, v);
                         }
 #endif
-                    var response = wb.UploadValues(m_serverFilePath, "POST", _message);
+                    var response = wb.UploadValues(serverFilePath, "POST", _message);
                     string responseInString = Encoding.UTF8.GetString(response);
                 }
                 catch

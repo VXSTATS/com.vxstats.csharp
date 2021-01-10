@@ -7,13 +7,13 @@ namespace vxstats
 {
     public sealed class Device
     {
-        private static string m_model = "";
+        private static string model = "";
 
-        private static string m_vendor = "";
+        private static string vendor = "";
 
-        private static string m_version = "";
+        private static string version = "";
 
-        private static string m_osVersion = "0.0.0";
+        private static string osVersion = "0.0.0";
 
         private static bool m_darkMode = false;
 
@@ -32,51 +32,51 @@ namespace vxstats
         private Device()
         {
 #if __MOBILE__
-            m_model = DeviceInfo.Model;
+            model = DeviceInfo.Model;
             switch (Xamarin.Forms.Device.RuntimePlatform)
             {
                 case Xamarin.Forms.Device.iOS:
-                    if ( m_model.Equals( "x86_64" ) )
+                    if ( model.Equals( "x86_64" ) )
                     {
-                        m_model = "iOS Simulator";
+                        model = "iOS Simulator";
                     }
                     else
                     {
-                        var versionBegin = m_model.IndexOf( "," );
-                        if ( versionBegin > 1 && Char.IsDigit( m_model, versionBegin - 1 ) ) {
+                        var versionBegin = model.IndexOf( "," );
+                        if ( versionBegin > 1 && Char.IsDigit( model, versionBegin - 1 ) ) {
 
                             --versionBegin;
                         }
-                        if ( versionBegin > 1 && Char.IsDigit( m_model, versionBegin - 1 ) ) {
+                        if ( versionBegin > 1 && Char.IsDigit( model, versionBegin - 1 ) ) {
 
                             --versionBegin;
                         }
-                        m_version = m_model.Substring(versionBegin, m_model.Length - versionBegin);
-                        m_model = m_model.Substring(0, versionBegin);
+                        version = model.Substring(versionBegin, model.Length - versionBegin);
+                        model = model.Substring(0, versionBegin);
                     }
                     break;
                 case Xamarin.Forms.Device.Android:
                 case Xamarin.Forms.Device.UWP:
                 default:
-                    string[] infos = m_model.Split(' ');
+                    string[] infos = model.Split(' ');
                     if ( infos.Length == 2 )
                     {
-                        m_model = infos[0];
-                        m_version = infos[1];
+                        model = infos[0];
+                        version = infos[1];
                     }
                     else {
 
-                      infos = m_model.Split('-');
+                      infos = model.Split('-');
                       if ( infos.Length == 2 )
                       {
-                          m_model = infos[0];
-                          m_version = infos[1];
+                          model = infos[0];
+                          version = infos[1];
                       }
                     }
                     break;
             }
-            m_vendor = DeviceInfo.Manufacturer;
-            m_osVersion = DeviceInfo.VersionString;
+            vendor = DeviceInfo.Manufacturer;
+            osVersion = DeviceInfo.VersionString;
 #endif
         }
 
@@ -88,7 +88,7 @@ namespace vxstats
             }
         }
 
-        public string uniqueIdentifier()
+        public string UniqueIdentifier()
         {
 #if __MOBILE__
             string uuid = Preferences.Get("uuid", "", "group.com.vxstat.statistics");
@@ -111,26 +111,66 @@ namespace vxstats
 #endif
         }
 
-        public bool fairUse() { return false; }
-        public string model() { return m_model; }
-        public void setModel(string _model) { m_model = _model; }
-        public string vendor() { return m_vendor; }
-        public void setVendor(string _vendor) { m_vendor = _vendor; }
-        public string version() { return m_version; }
-        public void setVersion(string _version) { m_version = _version; }
-        public string osVersion() { return m_osVersion; }
+        public bool FairUse() { return false; }
 
-        public bool useDarkMode()
+        public string Model
+        {
+            get
+            {
+                return model;
+            }
+
+            set
+            {
+                model = value;
+            }
+        }
+
+        public string Vendor
+        {
+            get
+            {
+                return vendor;
+            }
+
+            set
+            {
+                vendor = value;
+            }
+        }
+
+        public string Version
+        {
+            get
+            {
+                return version;
+            }
+
+            set
+            {
+                version = value;
+            }
+        }
+
+        public string OsVersion
+        {
+            get
+            {
+                return osVersion;
+            }
+        }
+
+        public bool UseDarkMode()
         {
             return m_darkMode;
         }
 
-        public bool isJailbroken()
+        public bool IsJailbroken()
         {
             return m_jailbroken;
         }
 
-        public bool isTabletMode()
+        public bool IsTabletMode()
         {
 #if __MOBILE__
             switch (Xamarin.Forms.Device.RuntimePlatform)
@@ -148,7 +188,7 @@ namespace vxstats
 #endif
         }
 
-        public bool hasTouchScreen()
+        public bool HasTouchScreen()
         {
 #if __MOBILE__
             switch (Xamarin.Forms.Device.RuntimePlatform)
@@ -166,6 +206,6 @@ namespace vxstats
 #endif
         }
 
-        public bool isVoiceOverActive() { return false; }
+        public bool IsVoiceOverActive() { return false; }
     }
 }

@@ -26,63 +26,63 @@ Checkout and open project with Visual Studio.
 ## Setup
 Setup your environment with your credentials. Please insert your username, password and url here. For defuscation please follow our best practice documentation.
 ```c#
-Statistics.Instance.setUsername( "sandbox" );
-Statistics.Instance.setPassword( "sandbox" );
-Statistics.Instance.setServerFilePath( "https://sandbox.vxstats.com" );
+Statistics.Instance.Username = "sandbox";
+Statistics.Instance.Password = "sandbox";
+Statistics.Instance.ServerFilePath = "https://sandbox.vxstats.com";
 ```
 
 ## Page
 This is the global context, where you are currently on in your application. Just name it easy and with logical app structure to identify where the user stays.
 ```c#
-Statistics.Instance.page("Main");
+Statistics.Instance.Page("Main");
 ```
 
 ## Event
 When you would like to request a page with dynamic content please use this function.
 ```c#
-Statistics.Instance.action("action", "value");
+Statistics.Instance.Action("action", "value");
 ```
 
 ### Ads
 To capture ads - correspondingly the shown ad.
 ```c#
-Statistics.Instance.ads("$campain");
+Statistics.Instance.Ads("$campain");
 ```
 
 ### Move
 To capture map shifts - correspondingly the new center.
 ```c#
-Statistics.Instance.move($latitude, $longitude);
+Statistics.Instance.Move($latitude, $longitude);
 ```
 
 ### Open
 To capture open websites or documents including the information which page or document has been requested.
 ```c#
-Statistics.Instance.open("$urlOrName");
+Statistics.Instance.Open("$urlOrName");
 ```
 
 ### Play
 To capture played files including the information which file/action has been played.
 ```c#
-Statistics.Instance.play("$urlOrName");
+Statistics.Instance.Play("$urlOrName");
 ```
 
 ### Search
 To capture searches including the information for which has been searched.
 ```c#
-Statistics.Instance.search("$search");
+Statistics.Instance.Search("$search");
 ```
 
 ### Shake
 To capture when the device has been shaken.
 ```c#
-Statistics.Instance.shake();
+Statistics.Instance.Shake();
 ```
 
 ### Touch
 To capture typed/touched actions.
 ```c#
-Statistics.Instance.touch("$action");
+Statistics.Instance.Touch("$action");
 ```
 
 # Compatiblity
