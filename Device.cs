@@ -115,45 +115,6 @@ namespace vxstats
                     }
                     key.Close();
                 }
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"))
-                {
-                    if (key != null)
-                    {
-                        string[] keys = key.GetValueNames();
-                        foreach (var keyName in keys)
-                        {
-                            Console.WriteLine("Key: '{0}'", keyName as String);
-                        }
-                        Object value = key.GetValue("AppsUseLightTheme");
-                        if (value != null)
-                        {
-                            if (Convert.ToInt32(value) == 0)
-                            {
-                                darkMode = true;
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine("Value empty");
-                        }
-                    }
-                    key.Close();
-                }
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ImmersiveShell"))
-                {
-                    if (key != null)
-                    {
-                        Object value = key.GetValue("TabletMode");
-                        if (value != null)
-                        {
-                            if (Convert.ToInt32(value) == 1)
-                            {
-                                tabletMode = true;
-                            }
-                        }
-                    }
-                    key.Close();
-                }
             }
             catch
             {
@@ -243,6 +204,31 @@ namespace vxstats
 
         public bool UseDarkMode()
         {
+#if __MOBILE__
+#else
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"))
+                {
+                    if (key != null)
+                    {
+                        Object value = key.GetValue("AppsUseLightTheme");
+                        if (value != null)
+                        {
+                            if (Convert.ToInt32(value) == 0)
+                            {
+                                darkMode = true;
+                            }
+                        }
+                    }
+                    key.Close();
+                }
+            }
+            catch
+            {
+                // TODO: Nothing to handle here?
+            }
+#endif
             return darkMode;
         }
 
@@ -261,8 +247,30 @@ namespace vxstats
                 case Xamarin.Forms.Device.Android:
                     return true;
             }
+#else
+            try
+            {
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ImmersiveShell"))
+                {
+                    if (key != null)
+                    {
+                        Object value = key.GetValue("TabletMode");
+                        if (value != null)
+                        {
+                            if (Convert.ToInt32(value) == 1)
+                            {
+                                tabletMode = true;
+                            }
+                        }
+                    }
+                    key.Close();
+                }
+            }
+            catch
+            {
+                // TODO: Nothing to handle here?
+            }
 #endif
-            // TODO: Check for TabletMode on Windows
             return tabletMode;
         }
 
@@ -282,6 +290,9 @@ namespace vxstats
         }
 
         // TODO: Check for voiceover
-        public bool IsVoiceOverActive() { return false; }
+        public bool IsVoiceOverActive()
+        {
+            return false;
+        }
     }
 }
