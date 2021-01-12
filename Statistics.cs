@@ -433,7 +433,6 @@ namespace vxstats
                         foreach (string v in _message.GetValues(s))
                         {
                             Debug.WriteLine("{0} {1}", s, v);
-                            Console.WriteLine("{0} {1}", s, v);
                         }
 #endif
                     var response = wb.UploadValues(serverFilePath, "POST", _message);

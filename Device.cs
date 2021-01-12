@@ -1,6 +1,8 @@
 ﻿using System;
 #if __MOBILE__
 using Xamarin.Essentials;
+#else
+using Microsoft.Win32;
 #endif
 
 namespace vxstats
@@ -15,11 +17,11 @@ namespace vxstats
 
         private static string osVersion = "0.0.0";
 
-        private static readonly bool darkMode = false;
+        private static bool darkMode = false;
 
         private static readonly bool jailbroken = false;
 
-        private static readonly bool tabletMode = false;
+        private static bool tabletMode = false;
 
         private static readonly bool touchScreen = false;
 
@@ -77,6 +79,86 @@ namespace vxstats
             }
             vendor = DeviceInfo.Manufacturer;
             osVersion = DeviceInfo.VersionString;
+#else
+            try
+            {
+                using (RegistryKey key = Registry.LocalMachine.OpenSubKey("SYSTEM\\CurrentControlSet\\Control\\SystemInformation"))
+                {
+                    if (key != null)
+                    {
+                        Object value = key.GetValue("SystemManufacturer");
+                        if (value != null)
+                        {
+                            vendor = value as String;
+                        }
+                        value = key.GetValue("SystemProductName");
+                        if (value != null)
+                        {
+                            model = value as String;
+                            string[] infos = model.Split(' ');
+                            if (infos.Length == 2)
+                            {
+                                model = infos[0];
+                                version = infos[1];
+                            }
+                            else
+                            {
+
+                                infos = model.Split('-');
+                                if (infos.Length == 2)
+                                {
+                                    model = infos[0];
+                                    version = infos[1];
+                                }
+                            }
+                        }
+                    }
+                    key.Close();
+                }
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize"))
+                {
+                    if (key != null)
+                    {
+                        string[] keys = key.GetValueNames();
+                        foreach (var keyName in keys)
+                        {
+                            Console.WriteLine("Key: '{0}'", keyName as String);
+                        }
+                        Object value = key.GetValue("AppsUseLightTheme");
+                        if (value != null)
+                        {
+                            if (Convert.ToInt32(value) == 0)
+                            {
+                                darkMode = true;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Value empty");
+                        }
+                    }
+                    key.Close();
+                }
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\ImmersiveShell"))
+                {
+                    if (key != null)
+                    {
+                        Object value = key.GetValue("TabletMode");
+                        if (value != null)
+                        {
+                            if (Convert.ToInt32(value) == 1)
+                            {
+                                tabletMode = true;
+                            }
+                        }
+                    }
+                    key.Close();
+                }
+            }
+            catch
+            {
+                // TODO: Nothing to handle here?
+            }
 #endif
         }
 
