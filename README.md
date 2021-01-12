@@ -21,7 +21,7 @@
    * [Windows](#windows-1)
 
 # Preparation
-Checkout and open project with Visual Studio. For Xarmian define \_\_MOBILE\_\_ if not already done by your project.
+Checkout and open project with Visual Studio. For Xamarin define \_\_MOBILE\_\_ if not already done by your project.
 
 ## Setup
 Setup your environment with your credentials. Please insert your username, password and url here. For defuscation please follow our best practice documentation.
