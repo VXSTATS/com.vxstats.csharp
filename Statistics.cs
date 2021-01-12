@@ -36,6 +36,15 @@ namespace vxstats
         private Statistics()
         {
             // TODO: Reachability check
+
+            // Remove insecure protocols
+            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Ssl3;
+            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls;
+            ServicePointManager.SecurityProtocol &= ~SecurityProtocolType.Tls11;
+
+            // Add secure tls1.2+
+            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+//            ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls13;
         }
 
         public static Statistics Instance
