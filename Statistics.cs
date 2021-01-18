@@ -26,6 +26,7 @@ using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 #if __MOBILE__
 using Xamarin.Essentials;
+using Xamarin.Forms;
 #else
 using System.Drawing;
 using System.Windows.Forms;
@@ -319,14 +320,13 @@ namespace vxstats
 #if __MOBILE__
             if (Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.iOS)
             {
-                result["osversion"] = os.VersionString;
                 result["os"] = "iOS";
             }
             else if (Xamarin.Forms.Device.RuntimePlatform == Xamarin.Forms.Device.Android)
             {
-                result["osversion"] = os.VersionString;
                 result["os"] = "Android";
             }
+            result["osversion"] = vxstats.Device.Instance.OsVersion;
 #endif
 
             if (!vxstats.Device.Instance.Model.Equals(""))
@@ -392,10 +392,18 @@ namespace vxstats
                 result["appbuild"] = build;
             }
 
+#if __MOBILE__
+            OSAppTheme currentTheme = Application.Current.RequestedTheme;
+            if (currentTheme == OSAppTheme.Dark)
+            {
+                result["dark"] = "1";
+            }
+#else
             if (vxstats.Device.Instance.UseDarkMode())
             {
                 result["dark"] = "1";
             }
+#endif
 
             if (vxstats.App.Instance.FairUse())
             {
@@ -430,13 +438,21 @@ namespace vxstats
 
             result["width"] = width.ToString();
             result["height"] = height.ToString();
-            result["dpr"] = density.ToString();
+            if (density != 1.0)
+            {
+                result["dpr"] = density.ToString();
+            }
 #else
             string screenWidth = Screen.PrimaryScreen.Bounds.Width.ToString();
             string screenHeight = Screen.PrimaryScreen.Bounds.Height.ToString();
+            var density = GetScalingFactor();
+
             result["width"] = screenWidth;
             result["height"] = screenHeight;
-            result["dpr"] = GetScalingFactor().ToString();
+            if (density != 1.0)
+            {
+                result["dpr"] = density.ToString();
+            }
 #endif
 
             long epochTicks = new DateTime(1970, 1, 1).Ticks;

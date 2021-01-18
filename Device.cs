@@ -61,7 +61,8 @@ namespace vxstats
             switch (Xamarin.Forms.Device.RuntimePlatform)
             {
                 case Xamarin.Forms.Device.iOS:
-                    if ( model.Equals( "x86_64" ) )
+                    vendor = "Apple Inc.";
+                    if (model.Equals("x86_64"))
                     {
                         model = "iOS Simulator";
                     }
@@ -81,6 +82,31 @@ namespace vxstats
                     }
                     break;
                 case Xamarin.Forms.Device.Android:
+                    vendor = "Google Inc.";
+                    if (model.Contains("Android SDK built"))
+                    {
+                        model = "Android Simulator";
+                    }
+                    else
+                    {
+                        string[] androidInfos = model.Split(' ');
+                        if (androidInfos.Length == 2)
+                        {
+                            model = androidInfos[0];
+                            version = androidInfos[1];
+                        }
+                        else
+                        {
+
+                            androidInfos = model.Split('-');
+                            if (androidInfos.Length == 2)
+                            {
+                                model = androidInfos[0];
+                                version = androidInfos[1];
+                            }
+                        }
+                    }
+                    break;
                 case Xamarin.Forms.Device.UWP:
                 default:
                     string[] infos = model.Split(' ');
@@ -100,7 +126,10 @@ namespace vxstats
                     }
                     break;
             }
-            vendor = DeviceInfo.Manufacturer;
+            if (!DeviceInfo.Manufacturer.Equals("unknown"))
+            {
+                vendor = DeviceInfo.Manufacturer;
+            }
             osVersion = DeviceInfo.VersionString;
 #else
             try
