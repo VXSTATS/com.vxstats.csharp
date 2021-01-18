@@ -404,9 +404,6 @@ namespace vxstats
 
 #if __MOBILE__
             var mainDisplayInfo = DeviceDisplay.MainDisplayInfo;
-            var orientation = mainDisplayInfo.Orientation;
-            var rotation = mainDisplayInfo.Rotation;
-
             var width = mainDisplayInfo.Width;
             var height = mainDisplayInfo.Height;
             var density = mainDisplayInfo.Density;

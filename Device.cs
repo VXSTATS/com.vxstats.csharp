@@ -118,7 +118,7 @@ namespace vxstats
             }
             catch
             {
-                // TODO: Nothing to handle here?
+                // Nothing to handle here!
             }
 #endif
         }
@@ -131,7 +131,6 @@ namespace vxstats
             }
         }
 
-        // TODO: Persistence uuid for non mobile
         public string UniqueIdentifier()
         {
 #if __MOBILE__
@@ -143,13 +142,41 @@ namespace vxstats
             }
             return uuid;
 #else
-            // TODO: Fix configuration/preferences
-            string uuid = ""; // d = Properties.Settings.Default["uuid"];
-            if (uuid == null || uuid.Equals(""))
+            string uuid = System.Guid.NewGuid().ToString();
+            try
             {
-                uuid = System.Guid.NewGuid().ToString();
-//                Properties.Settings.Default["uuid"] = uuid;
-//                Properties.Settings.Default.Save();
+                try
+                {
+                    RegistryKey createKey = Registry.CurrentUser.OpenSubKey("SOFTWARE");
+                    createKey.CreateSubKey("group.com.vxstat.statistics");
+                    createKey.CreateSubKey("OrganizationDefaults");
+                    createKey.Close();
+                }
+                catch
+                {
+                    // Do nothing, this is called, if the entry is already given.
+                }
+
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\group.com.vxstat.statistics\\OrganizationDefaults", true))
+                {
+                    if (key != null)
+                    {
+                        Object value = key.GetValue("uuid");
+                        if (value != null)
+                        {
+                            uuid = value as string;
+                        }
+                        else
+                        {
+                            key.SetValue("uuid", uuid);
+                        }
+                        key.Close();
+                    }
+                }
+            }
+            catch
+            {
+                // Nothing to handle here!
             }
             return uuid;
 #endif
@@ -220,13 +247,13 @@ namespace vxstats
                                 darkMode = true;
                             }
                         }
+                        key.Close();
                     }
-                    key.Close();
                 }
             }
             catch
             {
-                // TODO: Nothing to handle here?
+                // Nothing to handle here!
             }
 #endif
             return darkMode;
@@ -262,13 +289,13 @@ namespace vxstats
                                 tabletMode = true;
                             }
                         }
+                        key.Close();
                     }
-                    key.Close();
                 }
             }
             catch
             {
-                // TODO: Nothing to handle here?
+                // Nothing to handle here!
             }
 #endif
             return tabletMode;
