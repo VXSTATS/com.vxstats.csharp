@@ -21,6 +21,13 @@ using Xamarin.Essentials;
 using Microsoft.Win32;
 #endif
 
+/**
+ * @~english
+ * @brief The vxstats namespace.
+ *
+ * @~german
+ * @brief Der vxstats Namensraum.
+ */
 namespace vxstats
 {
     public sealed class Device

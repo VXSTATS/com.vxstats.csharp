@@ -31,6 +31,13 @@ using System.Drawing;
 using System.Windows.Forms;
 #endif
 
+/**
+ * @~english
+ * @brief The vxstats namespace.
+ *
+ * @~german
+ * @brief Der vxstats Namensraum.
+ */
 namespace vxstats
 {
     public sealed class Statistics
@@ -374,10 +381,7 @@ namespace vxstats
                 result["connection"] = "Offline";
             }
 #else
-//            ConnectionProfile profile = System.Net.NetworkInformation.GetInternetConnectionProfile();
-//            if (profile.IsWwanConnectionProfile)
-//            {
-                result["connection"] = "Wifi";
+            result["connection"] = "Wifi";
 #endif
 
             result["appid"] = vxstats.App.Instance.Identifier;
